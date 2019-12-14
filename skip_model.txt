@@ -1,14 +1,14 @@
 Sequential(
   (1): Concat(
-    (0): Sequential(
-      (1): Sequential(
+    (layer1): Sequential(
+      (0): Sequential(
         (0): ReflectionPad2d((0, 0, 0, 0))
         (1): Conv2d(32, 128, kernel_size=(1, 1), stride=(1, 1))
       )
-      (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-      (3): LeakyReLU(negative_slope=0.2, inplace=True)
+      (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): LeakyReLU(negative_slope=0.2, inplace=True)
     )
-    (1): Sequential(
+    (layer2): Sequential(
       (1): Sequential(
         (0): ReflectionPad2d((1, 1, 1, 1))
         (1): Conv2d(32, 128, kernel_size=(3, 3), stride=(2, 2))
@@ -23,15 +23,15 @@ Sequential(
       (6): LeakyReLU(negative_slope=0.2, inplace=True)
       (7): Sequential(
         (1): Concat(
-          (0): Sequential(
-            (1): Sequential(
+          (layer1): Sequential(
+            (0): Sequential(
               (0): ReflectionPad2d((0, 0, 0, 0))
               (1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1))
             )
-            (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-            (3): LeakyReLU(negative_slope=0.2, inplace=True)
+            (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): LeakyReLU(negative_slope=0.2, inplace=True)
           )
-          (1): Sequential(
+          (layer2): Sequential(
             (1): Sequential(
               (0): ReflectionPad2d((1, 1, 1, 1))
               (1): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
@@ -46,15 +46,15 @@ Sequential(
             (6): LeakyReLU(negative_slope=0.2, inplace=True)
             (7): Sequential(
               (1): Concat(
-                (0): Sequential(
-                  (1): Sequential(
+                (layer1): Sequential(
+                  (0): Sequential(
                     (0): ReflectionPad2d((0, 0, 0, 0))
                     (1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1))
                   )
-                  (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-                  (3): LeakyReLU(negative_slope=0.2, inplace=True)
+                  (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                  (2): LeakyReLU(negative_slope=0.2, inplace=True)
                 )
-                (1): Sequential(
+                (layer2): Sequential(
                   (1): Sequential(
                     (0): ReflectionPad2d((1, 1, 1, 1))
                     (1): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
@@ -69,15 +69,15 @@ Sequential(
                   (6): LeakyReLU(negative_slope=0.2, inplace=True)
                   (7): Sequential(
                     (1): Concat(
-                      (0): Sequential(
-                        (1): Sequential(
+                      (layer1): Sequential(
+                        (0): Sequential(
                           (0): ReflectionPad2d((0, 0, 0, 0))
                           (1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1))
                         )
-                        (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-                        (3): LeakyReLU(negative_slope=0.2, inplace=True)
+                        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                        (2): LeakyReLU(negative_slope=0.2, inplace=True)
                       )
-                      (1): Sequential(
+                      (layer2): Sequential(
                         (1): Sequential(
                           (0): ReflectionPad2d((1, 1, 1, 1))
                           (1): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
@@ -92,15 +92,15 @@ Sequential(
                         (6): LeakyReLU(negative_slope=0.2, inplace=True)
                         (7): Sequential(
                           (1): Concat(
-                            (0): Sequential(
-                              (1): Sequential(
+                            (layer1): Sequential(
+                              (0): Sequential(
                                 (0): ReflectionPad2d((0, 0, 0, 0))
                                 (1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1))
                               )
-                              (2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
-                              (3): LeakyReLU(negative_slope=0.2, inplace=True)
+                              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                              (2): LeakyReLU(negative_slope=0.2, inplace=True)
                             )
-                            (1): Sequential(
+                            (layer2): Sequential(
                               (1): Sequential(
                                 (0): ReflectionPad2d((1, 1, 1, 1))
                                 (1): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2))
@@ -202,4 +202,3 @@ Sequential(
     (1): Conv2d(128, 3, kernel_size=(1, 1), stride=(1, 1))
   )
   (10): Sigmoid()
-)
