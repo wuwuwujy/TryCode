@@ -21,13 +21,14 @@ if v_set == 5:
     num_epochs = 1000
     v = 25
 if v_set == 14:
-    batch_Size = 12 # exclude 3 and 6 because they are black and white
+    batch_Size = 12 # exclude 3 and 6 because these two images are black and white
     num_epochs = 2000
     v = 50
 
 train_data_dir = "project_image/SR_training_datasets/BSDS200"
 val_data_dir = "image_srgan/SRF_4/Set" + str(v_set) + "/target"
 
+#set model saving link 
 epoch_path = "epochs" + "_" + str(v_set)
 if not os.path.exists(epoch_path):
     os.makedirs(epoch_path)
@@ -134,7 +135,8 @@ if __name__ == '__main__':
         # save model parameters:
         if not os.path.exists(epoch_path):
             os.makedirs(epoch_path)
-
+        
+        # save model every 25 / 50 epochs
         if epoch % v == 0 and epoch != 0:
             torch.save(G.state_dict(), epoch_path + "/" + 'netG_epoch_%d_%d.pth' % (upscale_factor, epoch))
             torch.save(D.state_dict(), epoch_path + "/" + 'netD_epoch_%d_%d.pth' % (upscale_factor, epoch))
