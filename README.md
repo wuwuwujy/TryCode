@@ -9,4 +9,7 @@ The script will create an output folder for the developed images.
 
 ## Super-Resolution
 1. LapSRN
-2. [SRGAN]
+2. [SRGAN](https://github.com/wuwuwujy/TryCode/blob/master/srgan_train.py)
+   Before running srgan_train file, please specify v_set and t_set by typing 5 or 14.
+   After running srgan_strain, use [srgan_test]() to get psnr and ssim for testing dataset.
+   
