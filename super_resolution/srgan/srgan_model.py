@@ -3,6 +3,7 @@ import math
 import torch
 from torch import nn
 
+# build residual block for generator 
 class ResidualBlock(nn.Module):
     def __init__(self, channels):
         super(ResidualBlock, self).__init__()
@@ -21,7 +22,7 @@ class ResidualBlock(nn.Module):
 
         return x + residual
 
-
+#build upsample block for generator
 class UpsampleBLock(nn.Module):
     def __init__(self, in_channels, up_scale):
         super(UpsampleBLock, self).__init__()
@@ -35,7 +36,7 @@ class UpsampleBLock(nn.Module):
         x = self.prelu(x)
         return x
 
-
+#build generator model
 class Generator(nn.Module):
     def __init__(self, scale_factor):
         upsample_block_num = int(math.log(scale_factor, 2))
