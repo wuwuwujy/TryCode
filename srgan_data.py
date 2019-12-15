@@ -1,3 +1,8 @@
+'''
+training data: BSDS 200 from http://vllab.ucmerced.edu/wlai24/LapSRN/results/SR_training_datasets.zip
+validation and test data : set5 and set 14 from http://vllab.ucmerced.edu/wlai24/LapSRN/results/SR_testing_datasets.zip
+'''
+
 # load and format data
 from os import listdir
 from os.path import join
