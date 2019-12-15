@@ -1,4 +1,5 @@
 ## loss
+# Cite from: https://github.com/leftthomas/SRGAN/blob/master/loss.py
 import torch
 from torch import nn
 from torchvision.models.vgg import vgg16
