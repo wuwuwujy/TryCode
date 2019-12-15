@@ -2,7 +2,7 @@
 import torch
 from torch import nn
 from torchvision.models.vgg import vgg16
-#(reference: )
+#(reference: https://github.com/leftthomas/SRGAN/blob/master/loss.py)
 
 class TVLoss(nn.Module):
     def __init__(self, tv_loss_weight=1):
