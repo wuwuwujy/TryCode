@@ -11,7 +11,9 @@ import torch.distributed as dist
 import numpy as np
 import math
 
-#  initializing bilinear kernel
+# reference to https://github.com/BUPTLdy/Pytorch-LapSRN
+
+# initializing bilinear kernel
 def bilinear_kernel(size):
     middle = (size + 1) // 2
     if size % 2 == 1:

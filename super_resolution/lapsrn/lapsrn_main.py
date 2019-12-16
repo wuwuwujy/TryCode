@@ -18,8 +18,8 @@ from torch.autograd import Variable
 from torchvision import datasets, transforms
 from PIL import Image
 from torch.utils.data import DataLoader
-from project_model import LapSRN
-from project_data import get_training_set, get_test_set
+from lapsrn_model import LapSRN
+from lapsrn_data import get_training_set, get_test_set
 from glob import glob
 
 batch_size = 64

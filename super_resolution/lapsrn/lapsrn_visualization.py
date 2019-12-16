@@ -58,7 +58,6 @@ for epoch in range(0, 500, 50):
         SR4x = YCbCr2RGB(SR4x, cb, cr)
         # SR8x = YCbCr2RGB(SR8x, cb, cr)
         img = img.convert('RGB')
-        # save_image(SR2x, SR4x, SR8x, img, img_name)
         SR4x.save(save_folder + '/' +  img_name + '_' + str(epoch) + '_sr4.png')
         if epoch == 0:
             y = y.resize((int(y.size[0] / 4), int(y.size[1] / 4)), Image.BICUBIC)

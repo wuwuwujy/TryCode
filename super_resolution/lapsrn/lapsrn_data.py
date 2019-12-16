@@ -32,7 +32,8 @@ class DatasetFromFolder(data.Dataset):
         SR4x = self.SR4x_transform(input)
         SR2x = self.SR2x_transform(SR4x)
         LR = self.LR_transform(SR4x)
-        SR4x = torchvision.transforms.ToTensor(SR4x)
+        to_tensor = torchvision.transforms.ToTensor()
+        SR4x = to_tensor(SR4x)
         return LR, SR2x, SR4x
 
     def __len__(self):

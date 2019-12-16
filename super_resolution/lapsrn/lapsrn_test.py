@@ -1,4 +1,3 @@
-
 import os
 from os import listdir, makedirs, remove
 from os.path import exists, join, basename
@@ -20,8 +19,8 @@ from torch.autograd import Variable
 from torchvision import datasets, transforms
 from PIL import Image
 from torch.utils.data import DataLoader
-from project_model import LapSRN
-from project_data import get_training_set, get_test_set
+from lapsrn_model import LapSRN
+from lapsrn_data import get_training_set, get_test_set
 from glob import glob
 import numpy as np
 
@@ -31,7 +30,7 @@ num_epochs = 50
 lr = 1e-5
 num_workers = 4
 
-test_set = get_test_set(5)  # Set = 5, 14, 109, BSDS100, Urban100, historical
+test_set = get_test_set(14)  # Set = 5, 14, 109, BSDS100, Urban100, historical
 testing_data_loader = DataLoader(dataset = test_set, num_workers = num_workers, batch_size = test_batch_size, shuffle = False)
 
 def getPSNR(mse):
