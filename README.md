@@ -16,8 +16,8 @@ The script will create an output folder for the developed images.
    - Run [`lapsrn_psnr.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_psnr.py) to get PSNR values for super-resolution images during the training process.
    The scripts are for 4x super-resolution, for 8x script see `LapSRN_8x.zip`
 2. SRGAN
-   - Before running [`srgan_train.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_train.py) file, please specify validation dataset (v_set) and test dataset (t_set) by typing 5 or 14.
-   - After running srgan_strain, use [`srgan_test.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_test.py) to get psnr and ssim for testing dataset. In this step, please specify v_set, t_set and IMAGE_NAME. Please change the path if you want to test other datasets.
+   - Before running [`srgan_train.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_train.py) file, specify validation dataset (v_set) and test dataset (t_set) by typing 5 or 14.
+   - After running srgan_strain, use [`srgan_test.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_test.py) to get psnr and ssim for testing dataset. In this step, specify v_set, t_set and IMAGE_NAME for choosing validation dataset, test dataset and the image want to output. Please change the path if you want to test other datasets.
 3. DeepPrior
 
 ## Inpainting
