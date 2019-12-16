@@ -26,7 +26,7 @@ for i in range(2):
     all_psnr.append(getPSNR(original_img, bicubic_img))
     print(getPSNR(original_img, bicubic_img))
     
-    for epoch in range(0, 500, 50):
+    for epoch in range(0, 501, 50):
         epoch_img_path = "outputs/" + img_names[i] + "_" + str(epoch) + "_sr4.png"
         epoch_img = Image.open(epoch_img_path)
         all_psnr.append(getPSNR(original_img, epoch_img))
