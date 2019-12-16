@@ -3,73 +3,73 @@ import math
 import torch
 from torch import nn
 
-# build residual block for generator 
 class ResidualBlock(nn.Module):
-    def __init__(self, channels):
+    def __init__(self, c):
         super(ResidualBlock, self).__init__()
-        self.conv1 = nn.Conv2d(channels, channels, kernel_size=3, padding=1)
-        self.bn1 = nn.BatchNorm2d(channels)
+        self.con1 = nn.Conv2d(c, c, kernel_size=3, padding=1)
+        self.b1 = nn.BatchNorm2d(c)
         self.prelu = nn.PReLU()
-        self.conv2 = nn.Conv2d(channels, channels, kernel_size=3, padding=1)
-        self.bn2 = nn.BatchNorm2d(channels)
+        self.con2 = nn.Conv2d(c, c, kernel_size=3, padding=1)
+        self.b2 = nn.BatchNorm2d(c)
 
     def forward(self, x):
-        residual = self.conv1(x)
-        residual = self.bn1(residual)
-        residual = self.prelu(residual)
-        residual = self.conv2(residual)
-        residual = self.bn2(residual)
+        out = self.con1(x)
+        out = self.b1(out)
+        out = self.prelu(out)
+        out = self.con2(out)
+        out = self.b2(out)
 
-        return x + residual
+        return x + out
 
-#build upsample block for generator
+
 class UpsampleBLock(nn.Module):
-    def __init__(self, in_channels, up_scale):
+    def __init__(self, in_c, up_scale):
         super(UpsampleBLock, self).__init__()
-        self.conv = nn.Conv2d(in_channels, in_channels * up_scale ** 2, kernel_size=3, padding=1)
-        self.pixel_shuffle = nn.PixelShuffle(up_scale)
+        self.conv = nn.Conv2d(in_c, in_c * up_scale ** 2, kernel_size=3, padding=1)
+        self.shufflePixel = nn.PixelShuffle(up_scale)
         self.prelu = nn.PReLU()
 
     def forward(self, x):
-        x = self.conv(x)
-        x = self.pixel_shuffle(x)
-        x = self.prelu(x)
-        return x
+        out = self.conv(x)
+        out = self.shufflePixel(out)
+        out = self.prelu(out)
+        return out
 
-#build generator model
+
 class Generator(nn.Module):
     def __init__(self, scale_factor):
-        upsample_block_num = int(math.log(scale_factor, 2))
+        upsample_block_number = int(math.log(scale_factor, 2))
 
         super(Generator, self).__init__()
-        self.block1 = nn.Sequential(
+        self.b1 = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=9, padding=4),
             nn.PReLU()
         )
-        self.block2 = ResidualBlock(64)
-        self.block3 = ResidualBlock(64)
-        self.block4 = ResidualBlock(64)
-        self.block5 = ResidualBlock(64)
-        self.block6 = ResidualBlock(64)
-        self.block7 = nn.Sequential(
+        self.b2 = ResidualBlock(64)
+        self.b3 = ResidualBlock(64)
+        self.b4 = ResidualBlock(64)
+        self.b5 = ResidualBlock(64)
+        self.b6 = ResidualBlock(64)
+        self.b7 = nn.Sequential(
             nn.Conv2d(64, 64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64)
         )
-        block8 = [UpsampleBLock(64, 2) for _ in range(upsample_block_num)]
-        block8.append(nn.Conv2d(64, 3, kernel_size=9, padding=4))
-        self.block8 = nn.Sequential(*block8)
+        b8 = [UpsampleBLock(64, 2) for _ in range(upsample_block_number)]
+        b8.append(nn.Conv2d(64, 3, kernel_size=9, padding=4))
+        self.b8 = nn.Sequential(*b8)
 
     def forward(self, x):
-        block1 = self.block1(x)
-        block2 = self.block2(block1)
-        block3 = self.block3(block2)
-        block4 = self.block4(block3)
-        block5 = self.block5(block4)
-        block6 = self.block6(block5)
-        block7 = self.block7(block6)
-        block8 = self.block8(block1 + block7)
+        b1 = self.b1(x)
+        b2 = self.b2(b1)
+        b3 = self.b3(b2)
+        b4 = self.b4(b3)
+        b5 = self.b5(b4)
+        b6 = self.b6(b5)
+        b7 = self.b7(b6)
+        b8 = self.b8(b1 + b7)
+        out = (torch.tanh(b8) + 1) / 2
 
-        return (torch.tanh(block8) + 1) / 2
+        return out
 
 
 # build discriminator model
