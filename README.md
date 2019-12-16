@@ -7,7 +7,7 @@ It is already set up to automatically loop through all of the images created in 
 It is only dependent on the "utils" folder and the "data" folder, in which the input images are kept. 
 The script will create an output folder for the developed images.
 
-## Super-Resolution
+## [Super-Resolution](https://github.com/wuwuwujy/TryCode/tree/master/super_resolution)
 1. [LapSRN](https://github.com/wuwuwujy/TryCode/tree/master/super_resolution/lapsrn)
    1. Put all scripts along with the folder `project_image` in the same directory
    2. Run [`lapsrn_main.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_main.py) for training. Test dataset was set to Set5 by default.
