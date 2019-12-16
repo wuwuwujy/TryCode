@@ -28,7 +28,7 @@ The script will create an output folder for the developed images.
    Open the ipython file and run every cell, it will load the libraries, define the model, load the images, and start to train on this image. You can load the images you like by modify the image path. There are two different ways that can choose, one is to add an existing mask with English words, the other is inpainting 50% of missing pixels.
    
  ## Denoising
- 1. Skip Net. The skip net image denoising is written in jupyter notebook. Open the ipython file and run every cell, it will load the libraries, define the model, load the images, and start to train on this image. You can load the images you like by modify the image path.
+ 1. Skip Net. The skip net image denoising is written in jupyter notebook denoising.ipynb. Open the ipython file and run every cell, it will load the libraries, define the model, load the images, and start to train on this image. You can load the images you like by modify the image path.
  
    
 
