@@ -22,14 +22,6 @@ from project_model import LapSRN
 from project_data import get_training_set, get_test_set
 from glob import glob
 
-'''
-Modified from https://github.com/BUPTLdy/Pytorch-LapSRN/blob/master/train.py
-Change optimizer to Adam
-Remove function train() and test()
-Change the way printing
-Change the number of iterations in each epoch according to the original paper
-'''
-
 batch_size = 64
 test_batch_size = 1
 num_epochs = 2500
@@ -42,18 +34,24 @@ training_data_loader = DataLoader(dataset = train_set, num_workers = num_workers
 testing_data_loader = DataLoader(dataset = test_set, num_workers = num_workers, batch_size = test_batch_size, shuffle = False)
 print(len(training_data_loader))
 
-def CharbonnierLoss(predict, target): # cr: https://github.com/BUPTLdy/Pytorch-LapSRN/blob/master/train.py
-    return torch.mean(torch.sqrt(torch.pow((predict - target), 2) + 1e-6))  # epsilon=1e-3
+def Charbonnier(predict, target): 
+    loss = torch.sqrt(torch.pow((predict - target), 2) + 1e-6) # set epsilon=1e-3
+    mean_loss = torch.mean(loss)
+    return mean_loss  
 
+def getPSNR(mse):
+    PSNR = 10 * log10(1 / mse2x.item())
+    return PSNR
 
+    
 model = LapSRN()
-criterion = nn.MSELoss()
+getMSE = nn.MSELoss()
 model = model.cuda()
-criterion = criterion.cuda()
+getMSE = getMSE.cuda()
 optimizer = optim.Adam(model.parameters(), weight_decay = 1e-5)
 
-if not exists("checkpoint_folder"):
-        makedirs("checkpoint_folder")
+if not exists("models"):
+        makedirs("models")
         
 for epoch in range(num_epochs):
     start_time = time.time()
@@ -61,7 +59,11 @@ for epoch in range(num_epochs):
     for i in range(5):
         epoch_loss = 0
         for iteration, batch in enumerate(training_data_loader, 1):
-            LR, SR2x_target, SR4x_target = Variable(batch[0]), Variable(batch[1]), Variable(batch[2])
+            LR = Variable(batch[0])
+            SR2x_target  = Variable(batch[1])
+            SR4x_target = Variable(batch[2])
+            # SR8x_target = Variable(batch[3])
+            
             LR = LR.cuda()
             SR2x_target = SR2x_target.cuda()
             SR4x_target = SR4x_target.cuda()
@@ -70,14 +72,16 @@ for epoch in range(num_epochs):
             optimizer.zero_grad()
             SR2x, SR4x = model(LR)
 
-            loss2x = CharbonnierLoss(SR2x, SR2x_target)
-            loss4x = CharbonnierLoss(SR4x, SR4x_target)
-            # loss8x = CharbonnierLoss(SR8x, SR8x_target)
+            loss2x = Charbonnier(SR2x, SR2x_target)
+            loss4x = Charbonnier(SR4x, SR4x_target)
+            # loss8x = Charbonnier(SR8x, SR8x_target)
             loss = loss2x + loss4x # + loss8x
+            
             if loss.data.item() < 10:
                 epoch_loss += loss.data.item()
             else:
                 epoch_loss += 10
+                
             loss.backward()
             if(epoch>0):
                 for group in optimizer.param_groups:
@@ -94,26 +98,32 @@ for epoch in range(num_epochs):
     epoch_psnr4x = 0
     # epoch_psnr8x = 0
     for batch in testing_data_loader:
-        LR, SR2x_target, SR4x_target = Variable(batch[0]), Variable(batch[1]), Variable(batch[2])
+        LR = Variable(batch[0])
+        SR2x_target  = Variable(batch[1])
+        SR4x_target = Variable(batch[2])
+        # SR8x_target = Variable(batch[3])
+        
         LR = LR.cuda()
         SR2x_target = SR2x_target.cuda()
         SR4x_target = SR4x_target.cuda()
         # SR8x_target = SR8x_target.cuda()
 
         SR2x, SR4x = model(LR)
-        mse2x = criterion(SR2x, SR2x_target)
-        mse4x = criterion(SR4x, SR4x_target)
-        # mse8x = criterion(SR8x, SR8x_target)
-        psnr2x = 10 * log10(1 / mse2x.item())
-        psnr4x = 10 * log10(1 / mse4x.item())
-        # psnr8x = 10 * log10(1 / mse8x.item())
+        mse2x = getMSE(SR2x, SR2x_target)
+        mse4x = getMSE(SR4x, SR4x_target)
+        # mse8x = getMSE(SR8x, SR8x_target)
+        
+        psnr2x = getPSNR(mse2x)
+        psnr4x = getPSNR(mse4x)
+        # psnr8x = getPSNR(mse8x)
+        
         epoch_psnr2x = epoch_psnr2x + psnr2x
         epoch_psnr4x = epoch_psnr4x + psnr4x
         # epoch_psnr8x = epoch_psnr8x + psnr8x
-    print("Epoch {}, Avg. SR4x_PSNR: {:.4f} dB".format(epoch, epoch_psnr4x / len(testing_data_loader)))
+    print("Epoch {}, Avg. SR4x_PSNR: {:.4f}".format(epoch, epoch_psnr4x / len(testing_data_loader)))
     
     if epoch % 50 == 0:
-        model_save_path = "checkpoint_folder/model_epoch_{}.pth".format(epoch)
+        model_save_path = "models/model_epoch_{}.pth".format(epoch)
         torch.save(model, model_save_path)
     end_time = time.time()
     print(end_time - start_time)

@@ -1,4 +1,5 @@
 from __future__ import print_function
+import os
 from os.path import exists, join, basename
 from os import makedirs, remove
 import torch
@@ -6,27 +7,23 @@ from torch.autograd import Variable
 from PIL import Image
 from torchvision.transforms import ToTensor
 from glob import glob
-import matplotlib.pyplot as plt
 import numpy as np
-
-'''
-I used the centerCrop function from published code. 
-'''
 
 test_folder = "project_image/SR_testing_datasets/Set14"
 if not exists ("outputs"):
     makedirs ("outputs")
 save_folder = "outputs"
 
-def centeredCrop(img): # cr: https://github.com/BUPTLdy/Pytorch-LapSRN/
-    width, height = img.size  # Get dimensions
-    new_width = width - width % 4
-    new_height = height - height % 4
-    left = (width - new_width) / 2
-    top = (height - new_height) / 2
-    right = (width + new_width) / 2
-    bottom = (height + new_height) / 2
-    return img.crop((left, top, right, bottom))
+def cropImage(img, times): 
+    width, height = img.size 
+    subset_width = width - width % times
+    subset_height = height - height % times
+    left = width / 2 - subset_width / 2
+    right = width / 2 + subset_width / 2
+    up = height / 2 - subset_height / 2
+    down = height / 2 + subset_height / 2
+    out_img = img.crop((left, up, right, down))
+    return out_img
 
 def YCbCr2RGB(sr, cb, cr):
     sr_img_y = sr.data[0].numpy()
@@ -36,15 +33,16 @@ def YCbCr2RGB(sr, cb, cr):
     sr_img_cb = cb.resize(sr_img_y.size, Image.BICUBIC)
     sr_img_cr = cr.resize(sr_img_y.size, Image.BICUBIC)
     sr_img_merge = Image.merge('YCbCr', [sr_img_y, sr_img_cb, sr_img_cr])
-    return sr_img_merge.convert('RGB')
+    sr_img_merge_rgb = sr_img_merge.convert('RGB')
+    return sr_img_merge_rgb
     
 img_paths = glob(test_folder + '/*.png')
 for epoch in range(0, 500, 50):
-    model = torch.load('checkpoint_folder/model_epoch_' + str(epoch) + '.pth').cuda()
+    model = torch.load('models/model_epoch_' + str(epoch) + '.pth').cuda()
     for img_path in img_paths:
         img_name = img_path.split('/')[-1].split('.')[0]
         img = Image.open(img_path)
-        img = centeredCrop(img.convert('YCbCr'))
+        img = cropImage(img.convert('YCbCr'), 4)
         y, cb, cr = img.split()
         LR = y.resize((int(y.size[0] / 4), int(y.size[1] / 4)), Image.BICUBIC)
         LR = Variable(ToTensor()(LR)).view(1, -1, LR.size[1], LR.size[0])

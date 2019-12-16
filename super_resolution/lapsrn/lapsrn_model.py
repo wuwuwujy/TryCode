@@ -17,7 +17,7 @@ I directly used publicly available functions upsample_filt() and bilinear_upsamp
     for intializing a bilinear kernel for upsampling and creating weights matrix for 
     transposed convolution
     
-I basically write all the model blocks since I found the published code has something
+I basically re-write the model blocks since I found the published code has something
     inconsistent with the original paper (It has an one extra conv layer in feature extraction;
     also when doing 8x SR, the level 3 feature extraction block may only have 5 conv layers).
 '''

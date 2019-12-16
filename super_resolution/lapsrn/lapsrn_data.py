@@ -10,70 +10,57 @@ from six.moves import urllib
 import tarfile
 from torchvision.transforms import Compose, CenterCrop, ToTensor, Scale, RandomCrop, RandomHorizontalFlip, RandomVerticalFlip, Resize, RandomResizedCrop, ColorJitter, RandomAffine, RandomGrayscale
 
-'''
-Code referenced to https://github.com/BUPTLdy/Pytorch-LapSRN
-What I modify: 
-load_img(), DatasetFromFolder()
-
-What I re-write: 
-SR4x_transform() - add multiple image augmentation
-get_training_set() - provide multiple choices for different datasets
-get_testing_set() - provide multiple choices for different datasets
-
-What I add: 
-SR4x_transform_4test - just used centercrop as what the original paper did
-'''
-
-def load_img(filepath):
+def open_img(filepath):
     img = Image.open(filepath).convert('YCbCr')
     y, cb, cr = img.split()
     return y
 
 
 class DatasetFromFolder(data.Dataset):
-    def __init__(self, image_dir, LR_transform=None, SR2x_transform=None,
+    def __init__(self, folder_path, LR_transform=None, SR2x_transform=None,
                  SR4x_transform=None):
         super(DatasetFromFolder, self).__init__()
-        self.image_filenames = [join(image_dir, x) for x in listdir(image_dir)]
+        self.img_names = [join(folder_path, names) for names in listdir(folder_path)]
         self.LR_transform = LR_transform
         self.SR2x_transform = SR2x_transform
         self.SR4x_transform = SR4x_transform
         # self.SR8x_transform = SR8x_transform
 
     def __getitem__(self, index):
-        input = load_img(self.image_filenames[index])
+        input = open_img(self.img_names[index])
         # SR8x = self.SR8x_transform(input)
         SR4x = self.SR4x_transform(input)
         SR2x = self.SR2x_transform(SR4x)
         LR = self.LR_transform(SR4x)
-        to_tensor = torchvision.transforms.ToTensor()
-        SR4x = to_tensor(SR4x)
+        SR4x = torchvision.transforms.ToTensor(SR4x)
         return LR, SR2x, SR4x
 
     def __len__(self):
-        return len(self.image_filenames)
+        return len(self.img_names)
 
 
-crop_size = 128
+subset = 128
 
 
-def LR_transform(crop_size):
-    return Compose([
-        Resize(crop_size // 4),
+def LR_transform(subset):
+    ts = Compose([
+        Resize(subset // 4),
         ToTensor(),
     ])
+    return ts
 
 
-def SR2x_transform(crop_size):
-    return Compose([
-        Resize(crop_size // 2),
+def SR2x_transform(subset):
+    ts = Compose([
+        Resize(subset // 2),
         ToTensor(),
     ])
+    return ts
 
-def SR4x_transform(crop_size):
+def SR4x_transform(subset):
     try:
         ts = Compose([
-            RandomCrop((crop_size, crop_size)),#, pad_if_needed=False, padding_mode='reflect'),
+            RandomCrop((subset, subset)),#, pad_if_needed=False, padding_mode='reflect'),
             RandomHorizontalFlip(),
             RandomVerticalFlip(),
             ColorJitter(hue=.05, saturation=.05),
@@ -82,7 +69,7 @@ def SR4x_transform(crop_size):
         ])
     except:
         ts = Compose([
-            Resize(crop_size),
+            Resize(subset),
             RandomHorizontalFlip(),
             RandomVerticalFlip(),
             ColorJitter(hue=.05, saturation=.05),
@@ -91,11 +78,12 @@ def SR4x_transform(crop_size):
         ])
     return ts
     
-def SR4x_transform_4test(crop_size):
-        return Compose([
-        CenterCrop(crop_size),
+def SR4x_transform_4test(subset):
+    ts = Compose([
+        CenterCrop(subset),
         RandomHorizontalFlip(),
     ])
+    return ts
     
 
 
@@ -104,22 +92,22 @@ def get_training_set(Set_train):
     if Set_train == "T91":
         folder_path = "project_image/SR_training_datasets/T91"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform(subset))
 
     elif Set_train == "General100":
         folder_path = "project_image/SR_training_datasets/General100"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform(subset))
     elif Set_train == "BSDS200":
         folder_path = "project_image/SR_training_datasets/BSDS200"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform(subset))
     else:
         print("Train folder not found")
 
@@ -128,40 +116,40 @@ def get_test_set(Set):
     if Set == 5:
         folder_path = "project_image/SR_testing_datasets/Set5"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform_4test(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform_4test(subset))
     elif Set == 14:
         folder_path = "project_image/SR_testing_datasets/Set14"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform_4test(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform_4test(subset))
     elif Set == 109:
         folder_path = "project_image/SR_testing_datasets/Manga109"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform_4test(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform_4test(subset))
 
     elif Set == "BSDS100":
         folder_path = "project_image/SR_testing_datasets/BSDS100"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform_4test(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform_4test(subset))
     elif Set == "Urban100":
         folder_path = "project_image/SR_testing_datasets/Urban100"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform_4test(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform_4test(subset))
 
     elif Set == "historical":
         folder_path = "project_image/SR_testing_datasets/historical"
         return DatasetFromFolder(folder_path,
-                                 LR_transform=LR_transform(crop_size),
-                                 SR2x_transform=SR2x_transform(crop_size),
-                                 SR4x_transform=SR4x_transform_4test(crop_size))
+                                 LR_transform=LR_transform(subset),
+                                 SR2x_transform=SR2x_transform(subset),
+                                 SR4x_transform=SR4x_transform_4test(subset))
     else:
         print("Folder not found")

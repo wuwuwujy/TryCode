@@ -25,12 +25,6 @@ from project_data import get_training_set, get_test_set
 from glob import glob
 import numpy as np
 
-'''
-This file is I created based on the lapsrn_main.py for testing models on 
-    other datasets. E.g. we may use set5 as the testing set during training
-    and later we want to test performance on set14.
-'''
-
 batch_size = 64
 test_batch_size = 1
 num_epochs = 50
@@ -38,16 +32,20 @@ lr = 1e-5
 num_workers = 4
 
 test_set = get_test_set(5)  # Set = 5, 14, 109, BSDS100, Urban100, historical
-testing_data_loader = DataLoader(dataset=test_set, num_workers=num_workers, batch_size=test_batch_size, shuffle=False)
+testing_data_loader = DataLoader(dataset = test_set, num_workers = num_workers, batch_size = test_batch_size, shuffle = False)
 
-criterion = nn.MSELoss()
-criterion = criterion.cuda()
+def getPSNR(mse):
+    PSNR = 10 * log10(1 / mse2x.item())
+    return PSNR
+
+getMSE = nn.MSELoss()
+getMSE = getMSE.cuda()
 # optimizer = optim.Adam(model.parameters(), weight_decay = 1e-5)
 
 for epoch in range(0, 500, 50):
     # start_time = time.time()
     # optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5)
-    model = torch.load('checkpoint_folder/model_epoch_' + str(epoch) + '.pth').cuda()
+    model = torch.load('models/model_epoch_' + str(epoch) + '.pth').cuda()
     epoch_psnr2x = 0
     epoch_psnr4x = 0
     # epoch_psnr8x = 0
@@ -59,15 +57,17 @@ for epoch in range(0, 500, 50):
         # SR8x_target = SR8x_target.cuda()
 
         SR2x, SR4x = model(LR)
-        mse2x = criterion(SR2x, SR2x_target)
-        mse4x = criterion(SR4x, SR4x_target)
-        # mse8x = criterion(SR8x, SR8x_target)
-        psnr2x = 10 * log10(1 / mse2x.item())
-        psnr4x = 10 * log10(1 / mse4x.item())
-        # psnr8x = 10 * log10(1 / mse8x.item())
+        mse2x = getMSE(SR2x, SR2x_target)
+        mse4x = getMSE(SR4x, SR4x_target)
+        # mse8x = getMSE(SR8x, SR8x_target)
+        
+        psnr2x = getPSNR(mse2x)
+        psnr4x = getPSNR(mse4x)
+        # psnr8x = getPSNR(mse8x)
+        
         epoch_psnr2x = epoch_psnr2x + psnr2x
         epoch_psnr4x = epoch_psnr4x + psnr4x
         # epoch_psnr8x = epoch_psnr8x + psnr8x
-    print("Epoch {}, Avg. SR4x_PSNR: {:.4f} dB".format(epoch, epoch_psnr4x / len(testing_data_loader)))
+    print("Epoch {}, Avg. SR4x_PSNR: {:.4f}".format(epoch, epoch_psnr4x / len(testing_data_loader)))
     # end_time = time.time()
     # print(end_time - start_time)
