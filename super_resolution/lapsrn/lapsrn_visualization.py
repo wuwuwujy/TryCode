@@ -16,12 +16,14 @@ save_folder = "outputs"
 
 def cropImage(img, times): 
     width, height = img.size 
-    subset_width = width - width % times
-    subset_height = height - height % times
-    left = width / 2 - subset_width / 2
-    right = width / 2 + subset_width / 2
-    up = height / 2 - subset_height / 2
-    down = height / 2 + subset_height / 2
+    subset_width = width - (width % times)
+    subset_height = height - (height % times)
+    width_diff = width - subset_width
+    height_diff = height - subset_height
+    left = width_diff / 2
+    right = width - (width_diff / 2)
+    up =  height_diff / 2
+    down = height - (height_diff / 2)
     out_img = img.crop((left, up, right, down))
     return out_img
 
@@ -29,7 +31,8 @@ def YCbCr2RGB(sr, cb, cr):
     sr_img_y = sr.data[0].numpy()
     sr_img_y = sr_img_y * 255.0
     sr_img_y = sr_img_y.clip(0, 255)
-    sr_img_y = Image.fromarray(np.uint8(sr_img_y[0]), mode='L')
+    sr_img_y = np.uint8(sr_img_y[0])
+    sr_img_y = Image.fromarray(sr_img_y, mode='L')
     sr_img_cb = cb.resize(sr_img_y.size, Image.BICUBIC)
     sr_img_cr = cr.resize(sr_img_y.size, Image.BICUBIC)
     sr_img_merge = Image.merge('YCbCr', [sr_img_y, sr_img_cb, sr_img_cr])
