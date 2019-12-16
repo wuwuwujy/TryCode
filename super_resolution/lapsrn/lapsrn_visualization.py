@@ -40,7 +40,7 @@ def YCbCr2RGB(sr, cb, cr):
     return sr_img_merge_rgb
     
 img_paths = glob(test_folder + '/*.png')
-for epoch in range(0, 500, 50):
+for epoch in range(0, 501, 50):
     model = torch.load('models/model_epoch_' + str(epoch) + '.pth').cuda()
     for img_path in img_paths:
         img_name = img_path.split('/')[-1].split('.')[0]

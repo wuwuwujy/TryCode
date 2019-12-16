@@ -41,9 +41,8 @@ getMSE = nn.MSELoss()
 getMSE = getMSE.cuda()
 # optimizer = optim.Adam(model.parameters(), weight_decay = 1e-5)
 
-for epoch in range(0, 500, 50):
+for epoch in range(0, 501, 50):
     # start_time = time.time()
-    # optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5)
     model = torch.load('models/model_epoch_' + str(epoch) + '.pth').cuda()
     epoch_psnr2x = 0
     epoch_psnr4x = 0
