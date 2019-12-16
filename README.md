@@ -18,12 +18,18 @@ The script will create an output folder for the developed images.
 2. SRGAN
    - Before running [`srgan_train.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_train.py) file, specify validation dataset (v_set) and test dataset (t_set) by typing 5 or 14.
    - After running srgan_strain, use [`srgan_test.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_test.py) to get psnr and ssim for testing dataset. In this step, specify v_set, t_set and IMAGE_NAME for choosing validation dataset, test dataset and the image want to output. Please change the path if you want to test other datasets.
-3. DeepPrior
+3. SkipNet
+   -The skip net based super resolution is written in jupyter notebook
+   -Run super_resolution/sr-skipnet cells to run skip net image super resolutoin algorithm
 
 ## Inpainting
 1. [ResNet](https://github.com/wuwuwujy/TryCode/blob/master/inpainting_with_resnet.ipynb)
    
    Open the ipython file and run every cell, it will load the libraries, define the model, load the images, and start to train on this image. You can load the images you like by modify the image path. There are two different ways that can choose, one is to add an existing mask with English words, the other is inpainting 50% of missing pixels.
+   
+ ## Denoising
+ 1. Skip Net. The skip net image denoising is written in jupyter notebook. Open the ipython file and run every cell, it will load the libraries, define the model, load the images, and start to train on this image. You can load the images you like by modify the image path.
+ 
    
 
    
