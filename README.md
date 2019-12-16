@@ -9,11 +9,11 @@ The script will create an output folder for the developed images.
 
 ## [Super-Resolution](https://github.com/wuwuwujy/TryCode/tree/master/super_resolution)
 1. [LapSRN](https://github.com/wuwuwujy/TryCode/tree/master/super_resolution/lapsrn)
-   1. Put all scripts along with the folder `project_image` in the same directory
-   2. Run [`lapsrn_main.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_main.py) for training. Test dataset was set to Set5 by default.
-   3. Run [`lapsrn_test.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_test.py) to test PSNR on Set14 by default.
-   4. Run [`lapsrn_visualization.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_visualization.py) to get super-resolution images during the training process.
-   5. Run [`lapsrn_psnr.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_psnr.py) to get PSNR values for super-resolution images during the training process.
+   - Put all scripts along with the folder `project_image` in the same directory
+   - Run [`lapsrn_main.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_main.py) for training. Test dataset was set to Set5 by default.
+   - Run [`lapsrn_test.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_test.py) to test PSNR on Set14 by default.
+   - Run [`lapsrn_visualization.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_visualization.py) to get super-resolution images during the training process.
+   - Run [`lapsrn_psnr.py`](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/lapsrn/lapsrn_psnr.py) to get PSNR values for super-resolution images during the training process.
    The scripts are for 4x super-resolution, for 8x script see `LapSRN_8x.zip`
 2. SRGAN
    1. Before running [srgan_train](https://github.com/wuwuwujy/TryCode/blob/master/super_resolution/srgan/srgan_train.py) file, please specify validation dataset (v_set) and test dataset (t_set) by typing 5 or 14.
